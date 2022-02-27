@@ -23,6 +23,7 @@
 
     public async Task DrawHero()
     {
+        await Canvas.DrawImage(_canvas, "../images/characters/shadow.png", 0, 0, 32, 32, Hero.X * 16 / 2.0, Hero.Y * 16 / 2.0, 32, 32);
         await Canvas.DrawImage(_canvas, "../images/characters/people/hero.png", 0, 0, 32, 32, Hero.X * 16 / 2.0, Hero.Y * 16 / 2.0, 32, 32);
     }
 }
