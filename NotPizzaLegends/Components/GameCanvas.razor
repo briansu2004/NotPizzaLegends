@@ -1,0 +1,18 @@
+﻿@inject IJSRuntime Js
+
+<canvas @ref="_canvas" id="game-canvas" width="352" height="198"></canvas>
+
+@code {
+    private ElementReference _canvas;
+
+    private CanvasReference? Canvas { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        Canvas = new CanvasReference(_canvas, Js);
+        await Canvas.DrawImage("../images/maps/DemoLower.png", 0, 0);
+    }
+}
