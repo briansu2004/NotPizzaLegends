@@ -1,18 +1,28 @@
-﻿@inject IJSRuntime Js
+﻿@inject CanvasService Canvas
 
 <canvas @ref="_canvas" id="game-canvas" width="352" height="198"></canvas>
 
 @code {
     private ElementReference _canvas;
 
-    private CanvasReference? Canvas { get; set; }
+    private Sprite Hero { get; } = new Sprite { X = 1, Y = 5.5 };
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
             return;
 
-        Canvas = new CanvasReference(_canvas, Js);
-        await Canvas.DrawImage("../images/maps/DemoLower.png", 0, 0);
+        await DrawMap();
+        await DrawHero();
+    }
+
+    public async Task DrawMap()
+    {
+        await Canvas.DrawImage(_canvas, "../images/maps/DemoLower.png", 0, 0);
+    }
+
+    public async Task DrawHero()
+    {
+        await Canvas.DrawImage(_canvas, "../images/characters/people/hero.png", 0, 0, 32, 32, Hero.X * 16 / 2.0, Hero.Y * 16 / 2.0, 32, 32);
     }
 }
