@@ -1,29 +1,36 @@
-﻿@inject CanvasService Canvas
+﻿@using NotPizzaLegends.Sprites.Maps
+@using NotPizzaLegends.Sprites.Characters
 
 <canvas @ref="_canvas" id="game-canvas" width="352" height="198"></canvas>
+
+<DemoLower X="0" Y="0" @ref="_map" />
+<Hero X="0.25" Y="1.5" @ref="_hero" />
 
 @code {
     private ElementReference _canvas;
 
-    private Sprite Hero { get; } = new Sprite { X = 1, Y = 5.5 };
+    private Hero? _hero;
+    private DemoLower? _map;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
             return;
-
+            
         await DrawMap();
         await DrawHero();
+    }
+    
+    public async Task DrawHero()
+    {
+        _hero = _hero ?? throw new InvalidOperationException();
+        await _hero.Draw(_canvas);
     }
 
     public async Task DrawMap()
     {
-        await Canvas.DrawImage(_canvas, "../images/maps/DemoLower.png", 0, 0);
+        _map = _map ?? throw new InvalidOperationException();
+        await _map.Draw(_canvas);
     }
 
-    public async Task DrawHero()
-    {
-        await Canvas.DrawImage(_canvas, "../images/characters/shadow.png", 0, 0, 32, 32, Hero.X * 16 / 2.0, Hero.Y * 16 / 2.0, 32, 32);
-        await Canvas.DrawImage(_canvas, "../images/characters/people/hero.png", 0, 0, 32, 32, Hero.X * 16 / 2.0, Hero.Y * 16 / 2.0, 32, 32);
-    }
 }
