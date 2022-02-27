@@ -1,0 +1,1 @@
+Following along with the [Pizza Legends :pizza: ](https://www.youtube.com/playlist?list=PLcjhmZ8oLT0r9dSiIK6RB_PuBWlG1KSq_) tutorial series, but using C# and Blazor WASM instead of JS, 'cause why not
