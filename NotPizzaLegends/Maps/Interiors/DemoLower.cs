@@ -1,4 +1,4 @@
-﻿namespace NotPizzaLegends.Maps;
+﻿namespace NotPizzaLegends.Maps.Interiors;
 
 public class DemoLower : Map
 {
