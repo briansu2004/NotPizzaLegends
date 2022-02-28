@@ -1,0 +1,21 @@
+﻿@inject ICanvasService Canvas
+
+<div id="game-container">
+    <canvas @ref="_canvas" id="game-canvas" width="352" height="198"></canvas>
+</div>
+
+@code {
+    private ElementReference _canvas;
+
+    private Hero _hero = new Hero(0.5, 3.0);
+    private DemoLower _map = new DemoLower();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        await Canvas.Draw(_canvas, _map);
+        await Canvas.Draw(_canvas, _hero);
+    }
+}

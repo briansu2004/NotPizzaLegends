@@ -1,6 +1,6 @@
-﻿namespace NotPizzaLegends.Sprites.Maps;
+﻿namespace NotPizzaLegends.Maps;
 
-public class DemoLower : Sprite
+public class DemoLower : Map
 {
     public DemoLower()
     {
