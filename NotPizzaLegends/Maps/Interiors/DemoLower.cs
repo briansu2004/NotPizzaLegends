@@ -2,10 +2,10 @@
 
 public class DemoLower : Map
 {
-    public DemoLower()
+    private const string _upperSource = "../images/maps/DemoUpper.png";
+    private const string _lowerSource = "../images/maps/DemoLower.png";
+
+    public DemoLower() : base(_upperSource, _lowerSource)
     {
-        Width = 10.0;
-        Height = 10.0;
-        Source = "../images/maps/DemoLower.png";
     }
 }
