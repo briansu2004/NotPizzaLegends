@@ -2,7 +2,7 @@
 
 public class Hero : Sprite
 {
-    public Hero(double x, double y) : base(x, y)
+    public Hero()
     {
         Source = "../images/characters/people/hero.png";
         ShadowSource = "../images/characters/shadow.png";

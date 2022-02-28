@@ -1,14 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using NotPizzaLegends.Maps;
+using NotPizzaLegends.Scenes;
 using NotPizzaLegends.Sprites;
 
 namespace NotPizzaLegends.Canvas;
-
-public interface ICanvasService
-{
-    Task RenderScene(ElementReference canvas, IMap map, params ISprite[] sprites);
-}
 
 public class CanvasService : ICanvasService
 {
@@ -21,22 +16,22 @@ public class CanvasService : ICanvasService
         _js = js;
     }
 
-    public async Task RenderScene(ElementReference canvas, IMap map, params ISprite[] sprites)
+    public async Task RenderScene(ElementReference canvas, IScene scene)
     {
-        await DrawImage(canvas, map.LowerSource, 0, 0);
+        await DrawImage(canvas, scene.Map.LowerSource, 0, 0);
 
-        foreach (var sprite in sprites)
-            await DrawSprite(canvas, sprite);
+        foreach (var obj in scene.GameObjects)
+            await DrawGameObject(canvas, obj);
 
-        await DrawImage(canvas, map.UpperSource, 0, 0);
+        await DrawImage(canvas, scene.Map.UpperSource, 0, 0);
     }
 
-    async Task DrawSprite(ElementReference canvas, ISprite sprite, bool includeShadow = true)
+    async Task DrawGameObject(ElementReference canvas, IGameObject obj)
     {
-        if (sprite.ShadowSource != null && includeShadow)
-            await DrawImage(canvas, sprite.ShadowSource, 0, 0, Scale(sprite.X), Scale(sprite.Y));
+        if (obj.Sprite.ShadowSource != null && obj.ShowShadow)
+            await DrawImage(canvas, obj.Sprite.ShadowSource, 0, 0, Scale(obj.X), Scale(obj.Y));
 
-        await DrawImage(canvas, sprite.Source, 0, 0, Scale(sprite.X), Scale(sprite.Y));
+        await DrawImage(canvas, obj.Sprite.Source, 0, 0, Scale(obj.X), Scale(obj.Y));
     }
 
     async Task DrawImage(ElementReference canvas, string src, double dx, double dy)

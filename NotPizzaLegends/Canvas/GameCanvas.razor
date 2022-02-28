@@ -7,14 +7,13 @@
 @code {
     private ElementReference _canvas;
 
-    private Hero _hero = new Hero(0.5, 3.0);
-    private DemoLower _map = new DemoLower();
+    private IScene Scene = new DemoScene();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
             return;
 
-        await Canvas.RenderScene(_canvas, _map, _hero);
+        await Canvas.RenderScene(_canvas, Scene);
     }
 }

@@ -1,11 +1,11 @@
 ﻿namespace NotPizzaLegends.Maps.Interiors;
 
-public class DemoLower : Map
+public class DemoMap : Map
 {
     private const string _upperSource = "../images/maps/DemoUpper.png";
     private const string _lowerSource = "../images/maps/DemoLower.png";
 
-    public DemoLower() : base(_upperSource, _lowerSource)
+    public DemoMap() : base(_upperSource, _lowerSource)
     {
     }
 }
