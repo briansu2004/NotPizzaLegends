@@ -1,33 +1,50 @@
 ﻿@inject ICanvasService Canvas
 
 <div id="game-container">
-    <canvas @ref="_canvas" id="game-canvas" width="352" height="198"></canvas>
+    <canvas @ref="_canvas" id="game-canvas" width="352" height="198" @onkeydown="HandleKeyPress"></canvas>
 </div>
 
 @code {
-    
+
     private ElementReference _canvas;
 
-    [Parameter] public EventCallback<GameCanvas> OnRendered { get; set; }
+    private bool _isRunning;
+
+    [CascadingParameter] public IScene? Scene { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            await OnRendered.InvokeAsync(this);
+            await StartLoop();
     }
 
-    public async Task RenderScene(Scene scene)
+    async Task StartLoop()
     {
+        if (Scene == null) return;
+
+        _isRunning = true;
+
+        while(_isRunning)
+        {
+            await RenderScene();
+            await Task.Delay(15);
+        }
+    }
+
+    async Task RenderScene() 
+    {
+        if (Scene == null) return;
+
         if (!Canvas.IsInitialized)
             Canvas.Initialize(_canvas);
 
         await Canvas.ClearCanvas();
-        await Canvas.Draw(scene.Map?.LowerSource, 0, 0);
+        await Canvas.Draw(Scene.Map?.LowerSource, 0, 0);
 
-        foreach (var sprite in scene.Sprites)
+        foreach (var sprite in Scene.Sprites)
             await DrawSprite(sprite);
 
-        await Canvas.Draw(scene.Map?.UpperSource, 0, 0);
+        await Canvas.Draw(Scene.Map?.UpperSource, 0, 0);
     }
 
     async Task DrawSprite(ISprite? sprite)
@@ -38,5 +55,17 @@
             await Canvas.Draw(sprite.ShadowSource, 0, 0, sprite.X, sprite.Y);
 
         await Canvas.Draw(sprite.Source, 0, 0, sprite.X, sprite.Y);
+    }
+
+    void HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "w")
+            Scene?.MoveUp();
+        else if (e.Key == "a")
+            Scene?.MoveLeft();
+        else if (e.Key == "d")
+            Scene?.MoveRight();
+        else if (e.Key == "s")
+            Scene?.MoveDown();
     }
 }

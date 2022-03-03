@@ -3,11 +3,15 @@
 <DemoMap @ref="Map" />
 <Hero @ref="_hero" X="0.5" Y="4.0" />
 
+<CascadingValue Value="this">
+    <GameCanvas @ref="_canvas" />
+</CascadingValue>
+
 @code {
 
-    ISprite? _hero;
+    private GameCanvas? _canvas;
 
-    [CascadingParameter] GameCanvas? Canvas { get; set; }
+    ISprite? _hero;
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -15,26 +19,8 @@
             Sprites.Add(_hero);
     }
 
-    protected override async Task OnParametersSetAsync()
-    {
-        if (Canvas != null)
-            await Start();
-
-    }
-
-    async Task Start()
-    {
-        if (Canvas is null) throw new InvalidOperationException();
-
-        IsRunning = true;
-
-        while(IsRunning)
-        {
-            _hero?.Move(0.05, 0);
-            await Canvas.RenderScene(this);
-            await Task.Delay(15);
-        }
-    }
-    
-    void End() => IsRunning = false;
+    public override void MoveUp() => _hero?.Move(0, -0.05);
+    public override void MoveDown() => _hero?.Move(0, 0.05);
+    public override void MoveLeft() => _hero?.Move(-0.05, 0);
+    public override void MoveRight() => _hero?.Move(0.05, 0);
 }
