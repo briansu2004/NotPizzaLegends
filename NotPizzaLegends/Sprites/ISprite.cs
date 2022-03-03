@@ -1,7 +1,9 @@
-﻿namespace NotPizzaLegends.Sprites;
+﻿using Microsoft.AspNetCore.Components;
+
+namespace NotPizzaLegends.Sprites;
 
 public interface ISprite
 {
-    string? ShadowSource { get; }
-    string Source { get; }
+    ElementReference? ShadowSource { get; set; }
+    ElementReference? Source { get; set; }
 }

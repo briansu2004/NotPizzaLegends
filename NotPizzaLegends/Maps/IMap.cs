@@ -1,7 +1,9 @@
-﻿namespace NotPizzaLegends.Maps;
+﻿using Microsoft.AspNetCore.Components;
+
+namespace NotPizzaLegends.Maps;
 
 public interface IMap
 {
-    string UpperSource { get; }
-    string LowerSource { get; }
+    ElementReference? UpperSource { get; set; }
+    ElementReference? LowerSource { get; set; }
 }

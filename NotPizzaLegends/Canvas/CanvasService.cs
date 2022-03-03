@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using NotPizzaLegends.Scenes;
-using NotPizzaLegends.Sprites;
 
 namespace NotPizzaLegends.Canvas;
 
@@ -18,6 +17,7 @@ public class CanvasService : ICanvasService
 
     public async Task RenderScene(ElementReference canvas, IScene scene)
     {
+        await _js.InvokeVoidAsync("clearCanvas", canvas);
         await DrawImage(canvas, scene.Map.LowerSource, 0, 0);
 
         foreach (var obj in scene.GameObjects)
@@ -28,20 +28,24 @@ public class CanvasService : ICanvasService
 
     async Task DrawGameObject(ElementReference canvas, IGameObject obj)
     {
+        Console.WriteLine("Drawing game object...");
+
         if (obj.Sprite.ShadowSource != null && obj.ShowShadow)
             await DrawImage(canvas, obj.Sprite.ShadowSource, 0, 0, Scale(obj.X), Scale(obj.Y));
 
         await DrawImage(canvas, obj.Sprite.Source, 0, 0, Scale(obj.X), Scale(obj.Y));
     }
 
-    async Task DrawImage(ElementReference canvas, string src, double dx, double dy)
+    async Task DrawImage(ElementReference canvas, ElementReference? img, double dx, double dy)
     {
-        await _js.InvokeVoidAsync("drawImage", canvas, src, dx / 2.0, dy / 2.0);
+        if (img != null)
+            await _js.InvokeVoidAsync("drawImage", canvas, img, dx / 2.0, dy / 2.0);
     }
 
-    async Task DrawImage(ElementReference canvas, string src, double sx, double sy, double dx, double dy)
+    async Task DrawImage(ElementReference canvas, ElementReference? img, double sx, double sy, double dx, double dy)
     {
-        await _js.InvokeVoidAsync("drawAndCropImage", canvas, src, sx, sy, _baseSize, _baseSize, dx / 2.0, dy / 2.0, _baseSize, _baseSize);
+        if (img != null)
+            await _js.InvokeVoidAsync("drawAndCropImage", canvas, img, sx, sy, _baseSize, _baseSize, dx / 2.0, dy / 2.0, _baseSize, _baseSize);
     }
 
     private static double Scale(double value) => value * _baseSize;

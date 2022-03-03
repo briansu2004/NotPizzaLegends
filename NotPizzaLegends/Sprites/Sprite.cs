@@ -1,7 +1,9 @@
-﻿namespace NotPizzaLegends.Sprites;
+﻿using Microsoft.AspNetCore.Components;
+
+namespace NotPizzaLegends.Sprites;
 
 public abstract class Sprite : ISprite
 {
-    public string Source { get; protected set; } = string.Empty;
-    public string? ShadowSource { get; protected set; }
+    public ElementReference? Source { get; set; }
+    public ElementReference? ShadowSource { get; set; }
 }

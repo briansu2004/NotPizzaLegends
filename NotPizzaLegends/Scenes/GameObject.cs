@@ -15,6 +15,12 @@ public class GameObject : IGameObject
         X = x;
         Y = y;
     }
+
+    public void Move(double x, double y)
+    {
+        X += x;
+        Y += y;
+    }
 }
 
 public class GameObject<T> : GameObject where T : ISprite, new()

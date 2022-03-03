@@ -15,5 +15,5 @@ public class DemoScene : IScene
     public DemoMap DemoMap { get; private set; } = new DemoMap();
 
     // Character(s) in scene
-    public IGameObject Hero { get; private set; } = new GameObject<Hero>(0.5, 3.0);
+    public GameObject<Hero> Hero { get; private set; } = new GameObject<Hero>(0.5, 3.0);
 }

@@ -8,4 +8,6 @@ public interface IGameObject
     ISprite Sprite { get; }
     double X { get; }
     double Y { get; }
+
+    void Move(double x, double y);
 }

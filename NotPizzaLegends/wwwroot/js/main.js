@@ -1,23 +1,17 @@
-﻿function drawImage(canvas, src, x, y) {
+﻿function clearCanvas(canvas) {
 
     ctx = canvas.getContext("2d");
-
-    const image = new Image();
-    image.onload = () => {
-        ctx.drawImage(image, x, y)
-    };
-
-    image.src = src;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function drawAndCropImage(canvas, src, sx, sy, sw, sh, dx, dy, dw, dh) {
+function drawImage(canvas, img, x, y) {
 
     ctx = canvas.getContext("2d");
+    ctx.drawImage(img, x, y);
+}
 
-    const image = new Image();
-    image.onload = () => {
-        ctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh)
-    };
+function drawAndCropImage(canvas, img, sx, sy, sw, sh, dx, dy, dw, dh) {
 
-    image.src = src;
+    ctx = canvas.getContext("2d");
+    ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
 }

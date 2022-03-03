@@ -4,10 +4,21 @@
     <canvas @ref="_canvas" id="game-canvas" width="352" height="198"></canvas>
 </div>
 
+<div>
+    <button @onclick="StartGameLoop">Start</button>
+    <button @onclick="EndGameLoop">End</button>
+</div>
+
+<img src="images/maps/DemoUpper.png" hidden @ref="Scene.Map.UpperSource" />
+<img src="images/maps/DemoLower.png" hidden @ref="Scene.Map.LowerSource" />
+<img src="images/characters/people/hero.png" hidden @ref="Scene.Hero.Sprite.Source" />
+
 @code {
     private ElementReference _canvas;
 
-    private IScene Scene = new DemoScene();
+    private DemoScene Scene = new DemoScene();
+
+    private bool _shouldLoop;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -16,4 +27,19 @@
 
         await Canvas.RenderScene(_canvas, Scene);
     }
+
+    async Task StartGameLoop()
+    {
+        _shouldLoop = true;
+
+        while(_shouldLoop)
+        {
+            Scene.Hero.Move(0.05, 0);
+            await Canvas.RenderScene(_canvas, Scene);
+
+            await Task.Delay(15);
+        }
+    }
+
+    void EndGameLoop() => _shouldLoop = false;
 }
