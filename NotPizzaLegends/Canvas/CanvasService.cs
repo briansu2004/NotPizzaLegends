@@ -1,8 +1,17 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using NotPizzaLegends.Scenes;
 
 namespace NotPizzaLegends.Canvas;
+
+public interface ICanvasService
+{
+    bool IsInitialized { get; }
+
+    Task ClearCanvas();
+    Task Draw(ElementReference? img, double dx, double dy);
+    Task Draw(ElementReference? img, double sx, double sy, double dx, double dy);
+    void Initialize(ElementReference canvas);
+}
 
 public class CanvasService : ICanvasService
 {
@@ -10,43 +19,34 @@ public class CanvasService : ICanvasService
 
     private readonly IJSRuntime _js;
 
+    private ElementReference? _canvas;
+
+    public bool IsInitialized => _canvas != null;
+
     public CanvasService(IJSRuntime js)
     {
         _js = js;
     }
 
-    public async Task RenderScene(ElementReference canvas, IScene scene)
+    public void Initialize(ElementReference canvas)
     {
-        await _js.InvokeVoidAsync("clearCanvas", canvas);
-        await DrawImage(canvas, scene.Map.LowerSource, 0, 0);
-
-        foreach (var obj in scene.GameObjects)
-            await DrawGameObject(canvas, obj);
-
-        await DrawImage(canvas, scene.Map.UpperSource, 0, 0);
+        _canvas = canvas;
     }
 
-    async Task DrawGameObject(ElementReference canvas, IGameObject obj)
+    public async Task ClearCanvas()
     {
-        Console.WriteLine("Drawing game object...");
 
-        if (obj.Sprite.ShadowSource != null && obj.ShowShadow)
-            await DrawImage(canvas, obj.Sprite.ShadowSource, 0, 0, Scale(obj.X), Scale(obj.Y));
-
-        await DrawImage(canvas, obj.Sprite.Source, 0, 0, Scale(obj.X), Scale(obj.Y));
+        await _js.InvokeVoidAsync("clearCanvas", _canvas);
     }
 
-    async Task DrawImage(ElementReference canvas, ElementReference? img, double dx, double dy)
+    public async Task Draw(ElementReference? img, double dx, double dy)
     {
-        if (img != null)
-            await _js.InvokeVoidAsync("drawImage", canvas, img, dx / 2.0, dy / 2.0);
+        await _js.InvokeVoidAsync("drawImage", _canvas, img, Scale(dx) / 2.0, Scale(dy) / 2.0);
     }
 
-    async Task DrawImage(ElementReference canvas, ElementReference? img, double sx, double sy, double dx, double dy)
+    public async Task Draw(ElementReference? img, double sx, double sy, double dx, double dy)
     {
-        if (img != null)
-            await _js.InvokeVoidAsync("drawAndCropImage", canvas, img, sx, sy, _baseSize, _baseSize, dx / 2.0, dy / 2.0, _baseSize, _baseSize);
+        await _js.InvokeVoidAsync("drawAndCropImage", _canvas, img, sx, sy, _baseSize, _baseSize, Scale(dx) / 2.0, Scale(dy) / 2.0, _baseSize, _baseSize);
     }
-
     private static double Scale(double value) => value * _baseSize;
 }

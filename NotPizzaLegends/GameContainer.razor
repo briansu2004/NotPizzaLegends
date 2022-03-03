@@ -1,0 +1,13 @@
+﻿<GameCanvas OnRendered="Attach" @ref="_canvas" />
+
+<CascadingValue Value="_canvas">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    GameCanvas? _canvas;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    void Attach(GameCanvas canvas) => _canvas = canvas;
+}

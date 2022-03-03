@@ -4,42 +4,41 @@
     <canvas @ref="_canvas" id="game-canvas" width="352" height="198"></canvas>
 </div>
 
-<div>
-    <button @onclick="StartGameLoop">Start</button>
-    <button @onclick="EndGameLoop">End</button>
-</div>
-
-<img src="images/maps/DemoUpper.png" hidden @ref="Scene.Map.UpperSource" />
-<img src="images/maps/DemoLower.png" hidden @ref="Scene.Map.LowerSource" />
-<img src="images/characters/people/hero.png" hidden @ref="Scene.Hero.Sprite.Source" />
-
 @code {
+    
     private ElementReference _canvas;
 
-    private DemoScene Scene = new DemoScene();
+    [Parameter] public EventCallback<GameCanvas> OnRendered { get; set; }
 
     private bool _shouldLoop;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender)
-            return;
-
-        await Canvas.RenderScene(_canvas, Scene);
+        if (firstRender)
+            await OnRendered.InvokeAsync(this);
     }
 
-    async Task StartGameLoop()
+    public async Task RenderScene(Scene scene)
     {
-        _shouldLoop = true;
+        if (!Canvas.IsInitialized)
+            Canvas.Initialize(_canvas);
 
-        while(_shouldLoop)
-        {
-            Scene.Hero.Move(0.05, 0);
-            await Canvas.RenderScene(_canvas, Scene);
+        await Canvas.ClearCanvas();
+        await Canvas.Draw(scene.Map?.LowerSource, 0, 0);
 
-            await Task.Delay(15);
-        }
+        foreach (var sprite in scene.Sprites)
+            await DrawSprite(sprite);
+
+        await Canvas.Draw(scene.Map?.UpperSource, 0, 0);
     }
 
-    void EndGameLoop() => _shouldLoop = false;
+    async Task DrawSprite(ISprite? sprite)
+    {
+        if (sprite == null) return;
+
+        if (sprite.ShadowSource != null && sprite.ShowShadow)
+            await Canvas.Draw(sprite.ShadowSource, 0, 0, sprite.X, sprite.Y);
+
+        await Canvas.Draw(sprite.Source, 0, 0, sprite.X, sprite.Y);
+    }
 }
